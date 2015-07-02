@@ -1,0 +1,132 @@
+// 
+// 文件名:    mbsquare2d_mm_1b4d.input
+// 软件包:    JASMIN application
+// 版权  :	(c) 2004-2010 北京应用物理与计算数学研究所
+// 版本号:    $Revision: 1.4 $
+// 修改  :    $Date: 2007/01/12 06:52:41 $
+// 描述  :    输入文件:JASMIN-MBEulerMM实例.
+//
+
+
+DeformingGridInputUtilities2 {
+
+        POINTS {
+           number_of_points = 3 
+           coordinates_0    = 0.0, 0.5, 0.0
+           coordinates_1    = 0.0, 0.0, 0.5
+           boundary_points     = 0, 1, 2
+           boundary_conditions = 0, 0, 0
+        }
+        SEGMENTS {
+           number_of_segments = 4
+           segment_2 {
+              type_of_geometry   = "CARC"
+              radius = 50
+              number_of_cells    = 2
+              start_point_number = 1
+              end_point_number   = 4
+              center_on_left = FALSE
+              partitioning_method= "EVEN"
+           }
+	 segment_2 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 13
+              start_point_number = 4
+              end_point_number   = 6
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           }    
+	 segment_3 {     
+	 type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 6
+              end_point_number   = 7
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           }
+           segment_5 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 13
+              start_point_number = 5
+              end_point_number   = 7
+              partitioning_method= "EVEN"
+           }
+           segment_6 {
+              type_of_geometry   = "CARC"
+              radius = 80
+              number_of_cells    = 2
+              start_point_number = 3
+              end_point_number   = 5
+              center_on_left = FALSE
+              partitioning_method= "EVEN"
+           }
+          
+        }
+        DOMAINS {
+           number_of_domains = 1         
+           domain_0 {
+              mesh_generation_method = "XEVEN"
+              box   = [(0,0),(49,49)]
+              left_edge  = 1
+              right_edge = 0
+              lower_edge = 3
+              upper_edge = 2
+           }
+           
+        }
+        BLOCKS {
+           number_of_blocks = 1
+           block_0 {
+              domains = 0
+           }
+        }
+
+}
+
+TimerManager{
+   timer_list       = "apps::main::*","algs::*::*"
+   print_summed     = TRUE
+   print_max        = TRUE
+}
+
+MeshGen{
+
+}
+
+MeshGenLevelIntegrator{
+
+}
+
+HierarchyTimeIntegrator{
+
+   start_time           = 0.e0    // 模拟的初始时刻.
+   end_time             = 0.05    // 模拟的终止时刻.
+   max_integrator_steps = 2      // 模拟的最大时间步数.
+
+   max_dt              = 1.e-1    // 最大时间步步长.
+   grow_dt             = 1.2      // 连续两个时间步长的最大放大倍数.
+
+   regrid_interval     = 2000000           // 负载平衡的间隔. 
+   use_nonuniform_workload  = TRUE
+   load_balancing_threshold = 0.95
+   print_balance_efficiency = TRUE
+
+   GriddingAlgorithm{
+
+      // 仅包含单层网格.
+      max_levels = 1
+
+      // 最大网格片大小.
+      largest_patch_size {
+         level_0 = 64,64 
+      }
+
+      // 最小网格片大小.
+      smallest_patch_size {
+         level_0 = 8 , 8
+      }
+
+   }
+
+}
+

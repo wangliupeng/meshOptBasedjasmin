@@ -1,0 +1,637 @@
+// 
+// 文件名:    mbsquare2d_mm_1b4d.input
+// 软件包:    JASMIN application
+// 版权  :	(c) 2004-2010 北京应用物理与计算数学研究所
+// 版本号:    $Revision: 1.4 $
+// 修改  :    $Date: 2007/01/12 06:52:41 $
+// 描述  :    输入文件:JASMIN-MBEulerMM实例.
+//
+
+
+DeformingGridInputUtilities2 {
+
+        POINTS {
+           number_of_points = 36
+           coordinates_0    = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000, 1979, 1399.36, 
+                              2200, 2200, 2200, 2200, 2200, 3200, 3200, 3200, 3200, 3200,  
+                              4900, 4900, 4900, 4950, 4950, 4950, 4935.36, 4980, 4980, 4956.57,
+			      5000, 5000, 5000, 5000, 4970.71, 4980, 5000     
+           coordinates_1    = 0.0, 1000, 1979, 2750, 2780, 2800, 0.0, 0.0, 1399.36, 
+                              0.0, 1400, 2750, 2780, 2800, 0.0, 1400, 2750, 2780, 2800, 
+                              2750, 2780, 2800, 0.0, 1400, 2700, 2735.36, 1430, 2700, 2756.57,
+			      0.0, 1400, 1430, 2700, 2770.71, 1450, 1450  
+           boundary_points     = 0, 1, 2, 3, 4, 5, 6, 7
+           boundary_conditions = 0, 0, 0, 0, 0, 0, 0, 0
+        }
+        SEGMENTS {
+           number_of_segments = 56
+ 	   segment_0 {
+              type_of_geometry   = "POINT"
+	      number_of_cells    = 20
+              start_point_number = 0          
+           }
+           segment_1 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 20
+              start_point_number = 0
+              end_point_number   = 1
+              partitioning_method= "EVEN"
+     
+           }
+           segment_2 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 1
+              end_point_number   = 2
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           }
+	   segment_3 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 27
+              start_point_number = 2
+              end_point_number   = 3
+              partitioning_method= "EVEN"
+       	      boundary_condition = 1
+           }
+ 	   segment_4 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 3
+              end_point_number   = 4
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2
+              boundary_condition = 1
+           }
+ 	   segment_5 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 4
+              end_point_number   = 5
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           }
+	  segment_6 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 20
+              start_point_number = 0
+              end_point_number   = 6
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           } 	  
+           segment_7 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 20
+              start_point_number = 1
+              end_point_number   = 6
+              center_on_left = FALSE
+	      radius = 1000
+              partitioning_method= "EVEN"
+           }
+	  segment_8 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 6
+              end_point_number   = 7
+              partitioning_method= "EVEN"
+              boundary_condition = 1
+           }
+	  segment_9 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 10
+              start_point_number = 8
+              end_point_number   = 7
+              center_on_left = FALSE
+	      radius = 1979
+              partitioning_method= "EVEN"
+           }
+ 	   segment_10 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 10
+              start_point_number = 2
+              end_point_number   = 8
+              center_on_left = FALSE
+	      radius = 1979
+              partitioning_method= "EVEN"
+           }
+	 segment_11 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 7
+              end_point_number   = 9
+              partitioning_method= "EVEN"
+             
+           }
+	 segment_12 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 8
+              end_point_number   = 10
+              partitioning_method= "EVEN"
+           }
+	 segment_13 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 20
+              start_point_number = 3
+              end_point_number   = 11
+              partitioning_method= "EVEN"
+            
+           }
+	 segment_14 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 20
+              start_point_number = 4
+              end_point_number   = 12
+              partitioning_method= "EVEN"
+            
+           }
+ 	  segment_15 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 20
+              start_point_number = 5
+              end_point_number   = 13
+              partitioning_method= "EVEN"
+             
+           }
+
+	 segment_16 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 9
+              end_point_number   = 14
+              partitioning_method= "EVEN"
+             
+           }
+	 segment_17 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 10
+              end_point_number   = 15
+              partitioning_method= "EVEN"
+            
+           }
+	 segment_18 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 11
+              end_point_number   = 16
+              partitioning_method= "EVEN"
+            
+           }
+ 	  segment_19 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 12
+              end_point_number   = 17
+              partitioning_method= "EVEN"
+             
+           }
+	  segment_20 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 30
+              start_point_number = 13
+              end_point_number   = 18
+              partitioning_method= "EVEN"
+             
+           }
+
+	 segment_21 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 35
+              start_point_number = 14
+              end_point_number   = 22
+              partitioning_method= "EVEN"
+             
+           }
+	 segment_22 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 35
+              start_point_number = 15
+              end_point_number   = 23
+              partitioning_method= "EVEN"
+            
+           }
+	 segment_23 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 34
+              start_point_number = 16
+              end_point_number   = 19
+              partitioning_method= "EVEN"
+            
+           }
+ 	  segment_24 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 34
+              start_point_number = 17
+              end_point_number   = 20
+              partitioning_method= "EVEN"
+             
+           }
+	  segment_25 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 34
+              start_point_number = 18
+              end_point_number   = 21
+              partitioning_method= "EVEN"
+             
+           }
+
+ 	 segment_26 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 19
+              end_point_number   = 25
+              center_on_left = FALSE
+	      radius = 50
+              partitioning_method= "EVEN"
+           }
+         segment_27 {
+             type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 20
+              end_point_number   = 28
+	      center_on_left = FALSE
+	      radius = 80
+              partitioning_method= "EVEN"
+           }
+	segment_28 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 21
+              end_point_number   = 33
+              center_on_left = FALSE
+	      radius = 100
+              partitioning_method= "EVEN"
+           }
+
+ 	segment_29 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 22
+              end_point_number   = 23
+              partitioning_method= "EVEN"             
+           }
+ 	segment_30 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 26
+              start_point_number = 23
+              end_point_number   = 24
+              partitioning_method= "EVEN"
+             
+           }
+	segment_31 {
+             type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 24
+              end_point_number   = 25
+	      center_on_left = TRUE
+	      radius = 50
+              partitioning_method= "EVEN"
+           }	
+	segment_32 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 23
+              end_point_number   = 26
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2            
+           }
+ 	segment_33 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 24
+              end_point_number   = 27
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2
+             
+           }
+	segment_34 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 25
+              end_point_number   = 28
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2             
+           }
+
+ 	segment_35 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 25
+              start_point_number = 34
+              end_point_number   = 27
+              partitioning_method= "EVEN"
+             
+           }
+	segment_36 {
+              type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 27
+              end_point_number   = 28
+	      center_on_left = TRUE
+	      radius = 80
+              partitioning_method= "EVEN"
+           }
+
+
+	segment_37 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 22
+              end_point_number   = 29
+              partitioning_method= "EVEN"
+           }
+ 	segment_38 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 23
+              end_point_number   = 30
+              partitioning_method= "EVEN"
+             
+           }
+	segment_39 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 26
+              end_point_number   = 31
+              partitioning_method= "EVEN"            
+           }
+	segment_40 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 27
+              end_point_number   = 32
+              partitioning_method= "EVEN"
+             
+           }
+	segment_41 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 28
+              end_point_number   = 33
+              partitioning_method= "EVEN"
+             
+           }
+	segment_42 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 29
+              end_point_number   = 30
+              partitioning_method= "EVEN"
+             
+           }
+	segment_43 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 30
+              end_point_number   = 31
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2
+             
+           }
+	segment_44 {
+             type_of_geometry   = "LINE"
+              number_of_cells    = 25
+              start_point_number = 35
+              end_point_number   = 32
+              partitioning_method= "EVEN"
+           }
+	segment_45 {
+             type_of_geometry   = "CARC"
+              number_of_cells    = 1
+              start_point_number = 32
+              end_point_number   = 33
+	      center_on_left = TRUE
+	      radius = 100
+              partitioning_method= "EVEN"
+           }	
+	segment_46 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 9
+              end_point_number   = 10
+              partitioning_method= "EVEN"
+             
+           }
+	segment_47 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 27
+              start_point_number = 10
+              end_point_number   = 11
+              partitioning_method= "EVEN"
+             
+           }
+	segment_48 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 11
+              end_point_number   = 12
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2
+             
+           }
+	segment_49 {
+             type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 12
+              end_point_number   = 13
+              partitioning_method= "EVEN"
+           }
+	segment_50 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 14
+              end_point_number   = 15
+              partitioning_method= "EVEN"
+             
+           }
+	segment_51 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 27
+              start_point_number = 15
+              end_point_number   = 16
+              partitioning_method= "EVEN"
+             
+           }
+	segment_52 {
+              type_of_geometry   = "LINE"
+              number_of_cells    = 40
+              start_point_number = 16
+              end_point_number   = 17
+              partitioning_method= "PROP"
+	      prop_ratio = 1.2
+             
+           }
+	segment_53 {
+             type_of_geometry   = "LINE"
+              number_of_cells    = 10
+              start_point_number = 17
+              end_point_number   = 18
+              partitioning_method= "EVEN"
+           }
+	segment_54 {
+             type_of_geometry   = "LINE"
+              number_of_cells    = 1
+              start_point_number = 26
+              end_point_number   = 34
+              partitioning_method= "EVEN"
+           }
+	segment_55 {
+             type_of_geometry   = "LINE"
+              number_of_cells    = 1
+              start_point_number = 31
+              end_point_number   = 35
+              partitioning_method= "EVEN"
+           }
+	
+        }
+
+        DOMAINS {
+           number_of_domains = 10
+	    domain_0 {
+              mesh_generation_method = "YEVEN"
+              box   = [(0,0),(19,19)]
+              left_edge  = 1
+              right_edge = 6
+              lower_edge = 0
+              upper_edge = 7
+           }	
+  	   domain_1 {
+              mesh_generation_method = "YEVEN"
+              box   = [(0,21),(19,30)]
+              left_edge  = 2
+              right_edge = 8	      
+              lower_edge = 7
+              upper_edge = 10,9     
+           } 
+	  domain_2 {
+              mesh_generation_method = "XEVEN"
+              box   = [(21,0),(95,9)]
+              left_edge  = 9
+              left_directions = FALSE
+	      right_edge = 29
+              lower_edge = 11,16,21 
+              upper_edge = 12,17,22
+           }
+	  domain_3 {
+              mesh_generation_method = "YEVEN"
+              box   = [(96, 0),(105, 9)]
+              left_edge  = 29
+              right_edge = 42
+              lower_edge = 37
+              upper_edge = 38
+           } 
+	domain_4 {
+              mesh_generation_method = "YEVEN"
+              box   = [(0,50),(84,76)]
+              left_edge  = 3
+              right_edge = 30,31
+              lower_edge = 10,12,17,22
+              upper_edge = 13,18,23,26
+           } 
+	 domain_5 {
+              mesh_generation_method = "YEVEN"
+              box   = [(0,78),(84,117)] 
+              left_edge  = 4
+              right_edge = 34
+              lower_edge = 13,18,23,26
+              upper_edge = 14,19,24,27
+           }	
+	
+ 	domain_6 {
+              mesh_generation_method = "YEVEN"
+              box   = [(0,119),(84,128)] 
+              left_edge  = 5
+              right_edge = 41
+              lower_edge = 14,19,24,27
+              upper_edge = 15,20,25,28
+           }
+	
+        domain_7 {
+              mesh_generation_method = "YEVEN"
+              box   = [(85, 78),(111, 117)]
+              left_edge  = 34
+              right_edge = 32
+              lower_edge = 31,30
+	      lower_directions = FALSE,FALSE
+              upper_edge = 36,35,54
+	      upper_directions = FALSE,FALSE,FALSE
+           }
+	 domain_8 {
+              mesh_generation_method = "YEVEN"
+              box   = [(85, 119),(111, 128)]
+              left_edge  = 41
+              right_edge = 39
+              lower_edge = 36,35,54
+	      lower_directions = FALSE,FALSE,FALSE
+              upper_edge = 45,44,55
+	      upper_directions = FALSE,FALSE,FALSE
+           }
+	domain_9 {
+              mesh_generation_method = "YEVEN"
+              box   = [(112, 118),(131, 157)]
+              left_edge  = 32
+              right_edge = 43
+              lower_edge = 38
+              upper_edge = 39    
+           }
+			 
+        }
+
+
+        BLOCKS {
+           number_of_blocks = 1
+           block_0 {
+              domains = 0,1,2,3,4,5,6,7,8,9
+           }   	  	      
+ 	     	
+        }
+
+}
+
+TimerManager{
+   timer_list       = "apps::main::*","algs::*::*"
+   print_summed     = TRUE
+   print_max        = TRUE
+}
+
+MeshGen{
+
+}
+
+MeshGenLevelIntegrator{
+
+}
+
+HierarchyTimeIntegrator{
+
+   start_time           = 0.e0    // 模拟的初始时刻.
+   end_time             = 0.05    // 模拟的终止时刻.
+   max_integrator_steps = 2      // 模拟的最大时间步数.
+
+   max_dt              = 1.e-1    // 最大时间步步长.
+   grow_dt             = 1.2      // 连续两个时间步长的最大放大倍数.
+
+   regrid_interval     = 2000000           // 负载平衡的间隔. 
+   use_nonuniform_workload  = TRUE
+   load_balancing_threshold = 0.95
+   print_balance_efficiency = TRUE
+
+   GriddingAlgorithm{
+
+      // 仅包含单层网格.
+      max_levels = 1
+
+      // 最大网格片大小.
+      largest_patch_size {
+         level_0 = 128,128
+      }
+
+      // 最小网格片大小.
+      smallest_patch_size {
+         level_0 = 4,4
+      }
+
+   }
+
+}
+
