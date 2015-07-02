@@ -41,6 +41,8 @@ MeshOpt::MeshOpt(const string& object_name,
 
    getFromInput(input_db);
 
+   d_flag = false;
+
 
    // 为影像区的宽度赋值.
    d_zeroghosts = hier::IntVector<NDIM>(0);
@@ -120,6 +122,9 @@ void MeshOpt::initializeComponent(algs::IntegratorComponent<NDIM>* intc) const
         intc->registerCopyPatchData(d_coords_new_id,
                                 d_coords_current_id);
    }else if(intc_name=="WRITE_MESH") { // 数值构件: 输出网格
+	intc->registerRefinePatchData(d_coords_scratch_id,
+                                      d_coords_new_id);
+   }else if(intc_name=="DISTRUB_MESH") { // 数值构件: 输出网格
 	intc->registerRefinePatchData(d_coords_scratch_id,
                                       d_coords_new_id);
    }else if(intc_name == "OUTER_DATA"){ // 外表面构件
@@ -242,6 +247,7 @@ void MeshOpt::disturbMesh(hier::Patch<NDIM>& patch,
         (*coords_current)(ic(),1) -= dist;
         ++count;
     }
+    d_flag = true;
 
 }
 
@@ -254,12 +260,15 @@ void MeshOpt::computeOnPatch(hier::Patch<NDIM>& patch,
 {
 
    #ifdef DEBUG_CHECK_ASSERTIONS
-   assert(intc_name=="WRITE_MESH");
+   assert(intc_name=="WRITE_MESH"|| "DISTRUB_MESH");
    #endif
 
   if(intc_name =="WRITE_MESH") {      
        writeToVTK(patch,time,dt,initial_time);
+    } else if(intc_name =="DISTRUB_MESH") {      
+       disturbMesh(patch,time,dt,initial_time);
     }
+
 }
 
 
@@ -342,7 +351,11 @@ void MeshOpt::writeToVTK(hier::Patch<NDIM>& patch,
     bi << block_index;
     pi << patch_index;
 
-    std::string file_name = "block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
+    std::string file_name;
+    if(d_flag)
+	file_name = "1_block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
+    else 
+        file_name = "0_block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
 
     std::ofstream os(file_name.c_str());
 

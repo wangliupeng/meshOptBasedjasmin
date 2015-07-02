@@ -60,8 +60,12 @@ void MeshOptLevelIntegrator::initializeLevelIntegrator(
                                                               d_patch_strategy,
                                                               manager);
 	
-	 // 数值构件: 写网格.
-         d_mesh_intc = new algs::NumericalIntegratorComponent<NDIM>("WRITE_MESH",
+	  // 数值构件: 输出网格.
+	 d_write_mesh_intc = new algs::NumericalIntegratorComponent<NDIM>("WRITE_MESH",
+                                                                 d_patch_strategy,
+                                                                 manager); 
+	 // 数值构件: 扰动网格. 
+         d_distrub_mesh_intc = new algs::NumericalIntegratorComponent<NDIM>("DISTRUB_MESH",
                                                                  d_patch_strategy,
                                                                  manager); 
 	 // 外表面操作积分构件.
@@ -164,12 +168,22 @@ int MeshOptLevelIntegrator::advanceLevel(
                                       current_time);
 
     //输出网格
-    d_mesh_intc->computing(level,
+    d_write_mesh_intc->computing(level,
+                           current_time,
+                           actual_dt); 
+    //扰动网格
+    d_distrub_mesh_intc->computing(level,
                            current_time,
                            actual_dt); 
 
      // 外表面同步
-    d_outer_data_intc->operate(level);        
+    d_outer_data_intc->operate(level);  
+
+
+      //输出网格
+    d_write_mesh_intc->computing(level,
+                           current_time,
+                           actual_dt);       
                   
     // 设置新值数据片的时刻.
     d_new_intc->setTime(level,current_time+actual_dt);

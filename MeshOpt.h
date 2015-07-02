@@ -174,6 +174,9 @@ private:
 
    // 数据片的两种影像区宽度.
    hier::IntVector<NDIM> d_zeroghosts, d_oneghosts;
+
+    // 是否扰动
+    bool d_flag;
                   
 };
 

@@ -146,9 +146,10 @@ private:
    // 步长构件.
    tbox::Pointer< algs::DtIntegratorComponent<NDIM> > d_dt_intc;
 
-   // 数值构件: 输出网格.
+   // 数值构件: 输出网格, 扰动网格.
    tbox::Pointer< algs::NumericalIntegratorComponent<NDIM> > 
-                                                       d_mesh_intc;
+                                                   d_write_mesh_intc,
+						   d_distrub_mesh_intc;
 
     // 外表面操作积分构件. 
    tbox::Pointer< algs::OuterdataOperationIntegratorComponent<NDIM> >
