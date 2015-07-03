@@ -68,15 +68,20 @@ void MeshOptLevelIntegrator::initializeLevelIntegrator(
          d_distrub_mesh_intc = new algs::NumericalIntegratorComponent<NDIM>("DISTRUB_MESH",
                                                                  d_patch_strategy,
                                                                  manager); 
+ 	 // 数值构件: 优化网格. 
+       /* d_optimize_mesh_intc = new algs::NumericalIntegratorComponent<NDIM>("OPTIMIZE_MESH",
+                                                                 d_patch_strategy,
+                                                                 manager); */
 	 // 外表面操作积分构件.
 	  d_outer_data_intc = new algs::OuterdataOperationIntegratorComponent<NDIM>("OUTER_DATA",
                                                               d_patch_strategy,
                                                               manager,
-							      "MAX");
+                                                              "MAX");
 	 // 复制构件:  同步前复制数据片.
 	  d_reset_intc   = new algs::CopyIntegratorComponent<NDIM>("RESET_SOLUTION",
                                                               d_patch_strategy,
                                                               manager);
+
 	  d_cycle_copy_intc = new algs::CopyIntegratorComponent<NDIM>("COPY_PREMOVING",
                                                               d_patch_strategy,
                                                               manager);
@@ -175,9 +180,24 @@ int MeshOptLevelIntegrator::advanceLevel(
     d_distrub_mesh_intc->computing(level,
                            current_time,
                            actual_dt); 
+    // 外表面同步
+    d_outer_data_intc->operate(level);
 
-     // 外表面同步
-    d_outer_data_intc->operate(level);  
+    /*
+    //输出网格
+    d_write_mesh_intc->computing(level,
+                           current_time,
+                           actual_dt);   
+    int opt_num = 3;
+    for(int i = 0; i < opt_num; i++)
+    {
+	// 优化网格
+ 	d_optimize_mesh_intc->computing(level,
+                             current_time,
+                              actual_dt);
+	// 外表面同步
+	d_outer_data_intc->operate(level); 
+    }*/
 
 
       //输出网格

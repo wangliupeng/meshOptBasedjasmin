@@ -37,6 +37,10 @@ using namespace std;
 #include "StandardComponentPatchStrategy.h"
 #include "IntegratorComponent.h"
 
+#include "Mesquite.hpp"
+#include "Mesquite_all_headers.hpp"
+
+using namespace Mesquite2;
 using namespace JASMIN;
 
 
@@ -123,12 +127,19 @@ public:
   
 
 private:
- 
+  // 以下为私有成员函数.
+
    void getFromInput(
-   tbox::Pointer<tbox::Database> db);
+                tbox::Pointer<tbox::Database> db);
 
    // 创建所有变量和上下文, 注册变量上下文配对到变量数据库.
    void registerModelVariables();
+
+   // 标定结点类型
+   void setNodeInfo(hier::Patch<NDIM>& patch);
+
+   //创建用于优化的网格数据结构
+    MeshImpl * createLocalMesh(hier::Patch<NDIM> & patch);
 
   // 扰动网格
    void disturbMesh(hier::Patch<NDIM>& patch,
@@ -143,6 +154,7 @@ private:
                    const double  dt,
                    const bool    initial_time);
  
+
 
    // 以下为私有数据成员.
 
@@ -159,6 +171,9 @@ private:
 
    // 存储坐标
    tbox::Pointer< pdat::NodeVariable<NDIM,double> > d_coords;
+
+   // 固定点
+   tbox::Pointer<pdat::NodeVariable<NDIM,bool> > d_fixed;
   
 
    // 上下文: 当前值, 新值, 演算值.
@@ -177,6 +192,9 @@ private:
 
     // 是否扰动
     bool d_flag;
+
+    // 结点信息
+    tbox::Array<bool> d_fixed_info;
                   
 };
 
