@@ -185,7 +185,8 @@ private:
    // 数据片索引号.
    int d_coords_current_id,   // < d_coords, d_current >: 存储结点坐标的当前值.
        d_coords_new_id,       // < d_coords, d_new >    : 存储结点坐标的最新值.
-       d_coords_scratch_id;   // < d_coords, d_scratch >: 存储结点坐标的演算值.
+       d_coords_scratch_id,   // < d_coords, d_scratch >: 存储结点坐标的演算值.
+       d_fixed_info_id;
 
    // 数据片的两种影像区宽度.
    hier::IntVector<NDIM> d_zeroghosts, d_oneghosts;
@@ -194,7 +195,7 @@ private:
     bool d_flag;
 
     // 结点信息
-    tbox::Array<bool> d_fixed_info;
+   /// tbox::Array<bool> d_fixed_info;
                   
 };
 

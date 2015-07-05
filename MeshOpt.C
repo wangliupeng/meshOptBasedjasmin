@@ -76,6 +76,7 @@ void MeshOpt::registerModelVariables()
 
     // 定义变量.
     d_coords = new pdat::NodeVariable<NDIM,double>("coordinates", NDIM);
+    d_fixed = new pdat::NodeVariable<NDIM,bool>("fixed",1);
 
     // 当前值上下文, 新值上下文, 演算上下文.
     d_current = hier::VariableDatabase<NDIM>::getDatabase()->getContext("CURRENT");
@@ -98,7 +99,12 @@ void MeshOpt::registerModelVariables()
     d_coords_scratch_id =
             variable_db->registerVariableAndContext(d_coords,
                                                     d_scratch,
-                                                    d_oneghosts);
+                                                    d_zeroghosts);
+
+    d_fixed_info_id =
+            variable_db->registerVariableAndContext(d_fixed,
+                                                    d_current,
+                                                    d_zeroghosts);
 
 }
 
@@ -116,6 +122,7 @@ void MeshOpt::initializeComponent(algs::IntegratorComponent<NDIM>* intc) const
 
     if(intc_name=="INIT") {  // 初值构件 : 为网格坐标赋初值.
         intc->registerInitPatchData(d_coords_current_id);
+        intc->registerInitPatchData(d_fixed_info_id);
 
     }else if(intc_name=="TIME_STEP_SIZE") { //步长构件: 求时间步长.
 
@@ -186,6 +193,12 @@ void MeshOpt::initializePatchData( hier::Patch<NDIM>& patch,
             d_grid_tool->generateDeformingMeshForDomain(patch,
                                                         d_coords_current_id);
         }
+
+        tbox::Pointer< pdat::NodeData<NDIM,bool> > fixed_info
+                = patch.getPatchData(d_fixed_info_id);
+
+        // 赋初值
+        fixed_info->fillAll(false);
 
         // 设定结点类型
         setNodeInfo(patch);
@@ -307,8 +320,9 @@ void MeshOpt::putToDatabase(tbox::Pointer<tbox::Database> db)
     int cols = ilast(0) - ifirst(0)+2;
     int rows = ilast(1) - ifirst(1)+2;
 
-    int num_of_nodes = cols*rows;
-    d_fixed_info.resizeArray(num_of_nodes);
+     int num_of_nodes = cols*rows;
+
+    tbox::Array<bool> d_fixed_info(num_of_nodes,true);
 
     for(int row = 0; row < rows; row++)
     {
@@ -321,6 +335,15 @@ void MeshOpt::putToDatabase(tbox::Pointer<tbox::Database> db)
             else
                 d_fixed_info[row*cols+col] = false;
         }
+    }
+
+    tbox::Pointer< pdat::NodeData<NDIM,bool> > fixed_info
+            = patch.getPatchData(d_fixed_info_id);
+
+    int count=-1;
+    for(pdat::NodeIterator<NDIM> ic((*fixed_info).getBox()); ic; ic++)
+    {
+       (*fixed_info)(ic(),0) = d_fixed_info[++count];
     }
 }
 
@@ -368,10 +391,12 @@ MeshImpl * MeshOpt::createLocalMesh(hier::Patch<NDIM> & patch)
         node[++count]= 0.0;
     }
 
+    tbox::Pointer< pdat::NodeData<NDIM,bool> > fixed_info
+            = patch.getPatchData(d_fixed_info_id);
 
     MeshImpl * mesh = new  MeshImpl(num_of_nodes, num_of_elems,
                                     QUADRILATERAL,
-                                    d_fixed_info.getPointer(),
+                                    fixed_info.getPointer()->getPointer(),
                                     node.getPointer(),
                                     elem.getPointer());
     return mesh;
@@ -390,15 +415,23 @@ void MeshOpt::disturbMesh(hier::Patch<NDIM>& patch,
     tbox::Pointer< pdat::NodeData<NDIM,double> > coords_current
             = patch.getPatchData(d_coords_current_id);
 
+    tbox::Pointer< pdat::NodeData<NDIM,bool> > fixed_info
+            = patch.getPatchData(d_fixed_info_id);
+
     int count = -1;
     double dist = 0.01;
     for(pdat::NodeIterator<NDIM> ic((*coords_current).getBox()); ic; ic++)
     {
         dist *= -1;
-        (*coords_current)(ic(),0) += dist;
-        (*coords_current)(ic(),1) -= dist;
+        if((*fixed_info)(ic(),0) == false)
+        {
+            (*coords_current)(ic(),0) += dist;
+            (*coords_current)(ic(),1) -= dist;
+        }
         ++count;
     }
+
+    // 表示已扰动
     d_flag = true;
 
 }
