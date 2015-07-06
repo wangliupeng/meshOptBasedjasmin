@@ -151,8 +151,8 @@ private:
    // 数值构件: 输出网格, 扰动网格, 优化网格.
    tbox::Pointer< algs::NumericalIntegratorComponent<NDIM> >
                                                    d_write_mesh_intc,
-                                                   d_distrub_mesh_intc/*,
-                                                   d_optimize_mesh_intc*/;
+                                                   d_distrub_mesh_intc,
+                                                   d_optimize_mesh_intc;
     
     // 外表面操作积分构件.
    tbox::Pointer< algs::OuterdataOperationIntegratorComponent<NDIM> >

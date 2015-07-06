@@ -43,7 +43,7 @@ MeshOpt::MeshOpt(const string& object_name,
 
     getFromInput(input_db);
 
-    d_flag = false;
+    d_flag = 0;
 
 
     // 为影像区的宽度赋值.
@@ -138,11 +138,11 @@ void MeshOpt::initializeComponent(algs::IntegratorComponent<NDIM>* intc) const
         intc->registerRefinePatchData(d_coords_scratch_id,
                                       d_coords_new_id);
 
-    }/*else if(intc_name=="OPTIMIZE_MESH") { // 数值构件: 优化网格
+    }else if(intc_name=="OPTIMIZE_MESH") { // 数值构件: 优化网格
         intc->registerRefinePatchData(d_coords_scratch_id,
                                       d_coords_new_id);
 
-    }*/else if(intc_name == "OUTER_DATA"){ // 外表面构件
+    }else if(intc_name == "OUTER_DATA"){ // 外表面构件
         intc->registerPatchData (d_coords_new_id);
 
     }else if(intc_name=="RESET_SOLUTION") { // 复制构件: 接收数值解.
@@ -257,7 +257,7 @@ void MeshOpt::computeOnPatch(hier::Patch<NDIM>& patch,
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-    assert(intc_name=="WRITE_MESH"|| "DISTRUB_MESH" /*|| "OPTIMIZE_MESH"*/);
+    assert(intc_name=="WRITE_MESH"|| "DISTRUB_MESH" || "OPTIMIZE_MESH");
 #endif
 
     if(intc_name =="WRITE_MESH")
@@ -268,10 +268,10 @@ void MeshOpt::computeOnPatch(hier::Patch<NDIM>& patch,
     {
         disturbMesh(patch,time,dt,initial_time);
     }
-    /* else  if(intc_name =="OPTIMIZE_MESH")
+     else  if(intc_name =="OPTIMIZE_MESH")
    {
-       // 优化 disturbMesh(patch,time,dt,initial_time);
-   }*/
+        trustRegion(patch);
+   }
 
 }
 
@@ -391,6 +391,7 @@ MeshImpl * MeshOpt::createLocalMesh(hier::Patch<NDIM> & patch)
         node[++count]= 0.0;
     }
 
+
     tbox::Pointer< pdat::NodeData<NDIM,bool> > fixed_info
             = patch.getPatchData(d_fixed_info_id);
 
@@ -402,6 +403,31 @@ MeshImpl * MeshOpt::createLocalMesh(hier::Patch<NDIM> & patch)
     return mesh;
 }
 
+void MeshOpt::transformMeshtoPatch(MeshImpl * mesh, hier::Patch<NDIM>& patch, MsqError& err)
+{
+    std::vector<Mesh::VertexHandle>  vertices;
+    mesh->get_all_vertices(vertices,err);
+    size_t num_of_vertices = vertices.size();
+//    std::cout << num_of_vertices << std::endl;
+
+    std::vector<MsqVertex> coords(num_of_vertices);
+    mesh->vertices_get_coordinates(arrptr(vertices),arrptr(coords),num_of_vertices,err);
+
+    tbox::Pointer< pdat::NodeData<NDIM,double> > coords_current
+            = patch.getPatchData(d_coords_current_id);
+
+    int count = 0;
+    for(pdat::NodeIterator<NDIM> ic((*coords_current).getBox()); ic; ic++)
+    {
+        (*coords_current)(ic(),0) = coords[count][0];
+        (*coords_current)(ic(),1) =  coords[count][1];
+        ++count;
+    }
+
+    return;
+
+}
+
 
 // 扰动网格
 void MeshOpt::disturbMesh(hier::Patch<NDIM>& patch,
@@ -410,6 +436,7 @@ void MeshOpt::disturbMesh(hier::Patch<NDIM>& patch,
                           const bool    initial_time)
 {
     NULL_USE(dt);
+    NULL_USE(time);
     NULL_USE(initial_time);
 
     tbox::Pointer< pdat::NodeData<NDIM,double> > coords_current
@@ -432,7 +459,7 @@ void MeshOpt::disturbMesh(hier::Patch<NDIM>& patch,
     }
 
     // 表示已扰动
-    d_flag = true;
+    d_flag = 1;
 
 }
 
@@ -453,20 +480,55 @@ void MeshOpt::writeToVTK(hier::Patch<NDIM>& patch,
 
     int patch_index = patch.getPatchNumber();
 
-    std::stringstream bi, pi;
+    std::stringstream bi, pi, df;
     bi << block_index;
     pi << patch_index;
+    df << d_flag;
 
-    std::string file_name;
-    if(d_flag)
-        file_name = "1_block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
-    else
-        file_name = "0_block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
+    std::string file_name = df.str() + "_block_ " + bi.str()+ "_patch_" +  pi.str()  + ".vtk";
 
 
     MsqError err;
     MeshImpl * mesh = createLocalMesh(patch);
     mesh->write_vtk(file_name.c_str(), err);
+
+    return;
+}
+
+
+void MeshOpt::trustRegion(hier::Patch<NDIM>& patch)
+{
+    MsqError err;
+    MeshImpl* mesh = createLocalMesh(patch);
+
+    PlanarDomain domain(PlanarDomain::XY);
+    IdealWeightInverseMeanRatio inverse_mean_ratio(err);
+    LPtoPTemplate obj_func(&inverse_mean_ratio,2,err);
+    TrustRegion t_region(&obj_func);
+    t_region.use_global_patch();
+    TerminationCriterion tc_inner;
+    tc_inner.add_absolute_gradient_L2_norm(1e-6);
+    tc_inner.add_iteration_limit(1);
+    t_region.set_inner_termination_criterion(&tc_inner);
+    QualityAssessor m_ratio_qa(&inverse_mean_ratio);
+    m_ratio_qa.disable_printing_results();
+
+    InstructionQueue queue;
+    queue.add_quality_assessor(&m_ratio_qa,err);
+    queue.set_master_quality_improver(&t_region,err);
+    queue.add_quality_assessor(&m_ratio_qa,err);
+    MeshDomainAssoc mesh_and_domain = MeshDomainAssoc(mesh,&domain);
+    queue.run_instructions(&mesh_and_domain,err);
+    tbox::pout<< "Shape optimization completed." << std::endl;
+
+//    std::string file_name = "2__patch_3.vtk";
+//    mesh->write_vtk(file_name.c_str(), err);
+
+    transformMeshtoPatch(mesh,patch,err);
+
+
+
+    d_flag =2;
 
     return;
 }

@@ -154,7 +154,12 @@ private:
                    const double  dt,
                    const bool    initial_time);
  
+   // 把 mesh 网格中的结点坐标导入 patch 网格中
+   void transformMeshtoPatch(MeshImpl * mesh,
+                             hier::Patch<NDIM>& patch,
+                             MsqError& err);
 
+   void trustRegion(hier::Patch<NDIM>& patch);
 
    // 以下为私有数据成员.
 
@@ -192,11 +197,8 @@ private:
    hier::IntVector<NDIM> d_zeroghosts, d_oneghosts;
 
     // 是否扰动
-    bool d_flag;
+    int d_flag;
 
-    // 结点信息
-   /// tbox::Array<bool> d_fixed_info;
-                  
 };
 
 #endif
